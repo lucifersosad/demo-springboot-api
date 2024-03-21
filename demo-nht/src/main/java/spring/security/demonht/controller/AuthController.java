@@ -10,13 +10,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import spring.security.demonht.entity.RoleEntity;
 import spring.security.demonht.entity.UserEntity;
-import spring.security.demonht.model.LoginDTO;
-import spring.security.demonht.model.SignUpDTO;
+import spring.security.demonht.model.*;
 import spring.security.demonht.repository.RoleRepository;
 import spring.security.demonht.repository.UserRepository;
 import spring.security.demonht.service.JwtService;
@@ -107,5 +107,38 @@ public class AuthController {
         userRepository.save(user);
 
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
+    }
+
+    @PostMapping("/signin")
+    public ResponseEntity<AuthResponse> signIn(@RequestBody LoginDTO loginDto) {
+
+        String username = loginDto.getUsernameOrEmail();
+        String password = loginDto.getPassword();
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        System.out.println(authentication);
+
+        if (authentication.isAuthenticated()) {
+            UserModel userModel = new UserModel();
+            UserEntity userEntity = userRepository.getUserByUsername(username);
+            userModel.setUserName(userEntity.getUsername());
+            userModel.setEmail(userEntity.getEmail());
+            userModel.setRole(userEntity.getRoles().toString());
+            userModel.set_isActive(userEntity.getEnabled());
+
+            String token = jwtService.generateToken(username);
+            TokenList tokenList = new TokenList();
+            tokenList.setAccessToken(token);
+
+            AuthResponse authResponse = new AuthResponse();
+            authResponse.setSuccess(true);
+            authResponse.setStatus(HttpStatus.OK.value());
+            authResponse.setMessage("Login Success");
+            authResponse.setUser(userModel);
+            authResponse.setTokenList(tokenList);
+
+            return ResponseEntity.ok(authResponse);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(null);
+        }
     }
 }

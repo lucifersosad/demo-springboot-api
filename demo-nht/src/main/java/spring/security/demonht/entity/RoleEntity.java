@@ -18,5 +18,9 @@ public class RoleEntity implements Serializable {
     private Long id;
     @Column(name = "role_name", length = 50, columnDefinition = "nvarchar(50) not null")
     private String name;
+    @Override
+    public String toString() {
+        return name.toString();
+    }
 
 }
