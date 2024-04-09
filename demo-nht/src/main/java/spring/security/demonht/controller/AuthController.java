@@ -110,20 +110,23 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> signIn(@RequestBody LoginDTO loginDto) {
+    public ResponseEntity<AuthResponse> signIn(@RequestParam("username") String username,
+                                               @RequestParam("password") String password) {
 
-        String username = loginDto.getUsernameOrEmail();
-        String password = loginDto.getPassword();
+//        String username = loginDto.getUsernameOrEmail();
+//        String password = loginDto.getPassword();
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         System.out.println(authentication);
 
         if (authentication.isAuthenticated()) {
             UserModel userModel = new UserModel();
             UserEntity userEntity = userRepository.getUserByUsername(username);
-            userModel.setUserName(userEntity.getUsername());
+            userModel.setId(String.valueOf(userEntity.getId()));
+            userModel.setUsername(userEntity.getUsername());
             userModel.setEmail(userEntity.getEmail());
-            userModel.setRole(userEntity.getRoles().toString());
-            userModel.set_isActive(userEntity.getEnabled());
+            userModel.setGender(userEntity.getGender());
+            userModel.setImages(userEntity.getImages());
+            userModel.setFName(userEntity.getFullName());
 
             String token = jwtService.generateToken(username);
             TokenList tokenList = new TokenList();
@@ -131,6 +134,7 @@ public class AuthController {
 
             AuthResponse authResponse = new AuthResponse();
             authResponse.setSuccess(true);
+            authResponse.setError(false);
             authResponse.setStatus(HttpStatus.OK.value());
             authResponse.setMessage("Login Success");
             authResponse.setUser(userModel);

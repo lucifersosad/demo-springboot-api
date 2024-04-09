@@ -17,9 +17,12 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+    private String fullName;
     private String email;
     @Column(length = 60, columnDefinition = "nvarchar(50) not null")
     private String name;
+    private String gender;
+    private String images;
     private String password;
     @Column(columnDefinition = "BOOLEAN")
     private Boolean enabled;

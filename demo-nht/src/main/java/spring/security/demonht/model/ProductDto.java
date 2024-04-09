@@ -7,11 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserModel {
+public class ProductDto {
     private String id;
-    private String username;
-    private String fName;
-    private String gender;
-    private String email;
-    private String images;
+    private String strMeal;
+    private String strMealThumb;
+    private String idMeal;
+    private String idcategory;
 }

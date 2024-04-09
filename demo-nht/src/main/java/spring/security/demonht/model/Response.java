@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public abstract class Response {
     private boolean success;
+    private boolean error;
     private int status;
     private String message;
 }
