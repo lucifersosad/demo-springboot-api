@@ -6,22 +6,22 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "category")
-public class CategoryEntity {
+@Table(name = "products")
+public class Product {
     @Id
-    @Column(name = "cateid")
-    private String id;
+    @Column(name = "productid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String name;
-    private String images;
-    private String description;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "category")
-    private List<ProductEntity> products;
+    @ManyToOne
+    @JoinColumn(name = "featuredcateid")
+    private FeaturedCategory featuredCategory;
+
 }
