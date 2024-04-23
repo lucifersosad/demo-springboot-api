@@ -6,7 +6,6 @@ import spring.security.demonht.entity.SubjectEntity;
 import spring.security.demonht.repository.SubjectRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SubjectServiceImpl implements ISubjectService {
@@ -17,26 +16,32 @@ public class SubjectServiceImpl implements ISubjectService {
         return subjectRepository.findAll();
     }
 
+    @Override
     public List<SubjectEntity> findAllById(Iterable<Long> longs) {
         return subjectRepository.findAllById(longs);
     }
 
+    @Override
     public <S extends SubjectEntity> S save(S entity) {
         return subjectRepository.save(entity);
     }
 
+    @Override
     public long count() {
         return subjectRepository.count();
     }
 
+    @Override
     public void deleteAll() {
         subjectRepository.deleteAll();
     }
 
+    @Override
     public void deleteById(Long aLong) {
         subjectRepository.deleteById(aLong);
     }
 
+    @Override
     public boolean checkSubjectExisted(Long id) {
         return subjectRepository.existsById(id);
     }
